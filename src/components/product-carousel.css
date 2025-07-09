@@ -1,0 +1,16 @@
+/* product-carousel.css */
+
+.swiper-pagination-bullet {
+  width: 20px;
+  height: 4px;
+  border-radius: 2px;
+  background: #ccc;
+  margin: 0 4px;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: #000;
+  opacity: 1;
+}

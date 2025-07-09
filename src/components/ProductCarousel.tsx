@@ -6,6 +6,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import './product-carousel.css'; // 🔧 Custom styles for pagination bullets
 
 interface Product {
   id: string;
@@ -50,13 +51,13 @@ const ProductCarousel: React.FC = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
-      {/* Header Section */}
+      {/* Header */}
       <div className="mb-6 text-center">
         <h2 className="text-3xl font-bold text-gray-800">Featured Products</h2>
         <p className="text-gray-500 mt-1">Discover top picks from our store</p>
       </div>
 
-      {/* Swiper Carousel */}
+      {/* Carousel */}
       <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={20}
@@ -72,13 +73,17 @@ const ProductCarousel: React.FC = () => {
           1024: { slidesPerView: 3 },
         }}
       >
-        {products.map((product) => {
+        {products.map((product, index) => {
           const price =
             product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
 
           return (
             <SwiperSlide key={product.id}>
-              <div className="bg-white rounded-xl shadow hover:shadow-lg transition p-4 h-full">
+              <div
+                className={`bg-white rounded-xl shadow hover:shadow-lg transition p-4 h-full ${
+                  index % 2 === 1 ? 'mt-6' : ''
+                }`}
+              >
                 {product.featuredImage && (
                   <img
                     src={product.featuredImage.url}
@@ -96,7 +101,7 @@ const ProductCarousel: React.FC = () => {
         })}
       </Swiper>
 
-      {/* Pagination rendered below */}
+      {/* Pagination below */}
       <div className="custom-swiper-pagination mt-4 text-center" />
     </div>
   );
