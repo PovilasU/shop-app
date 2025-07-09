@@ -6,7 +6,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import './product-carousel.css'; // 🔧 Custom styles for pagination bullets
+import './product-carousel.css'; // custom CSS for pagination styles
 
 interface Product {
   id: string;
@@ -49,6 +49,8 @@ const ProductCarousel: React.FC = () => {
     );
   }
 
+  const topProducts = products.slice(0, 8);
+
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
       {/* Header */}
@@ -73,9 +75,8 @@ const ProductCarousel: React.FC = () => {
           1024: { slidesPerView: 3 },
         }}
       >
-        {products.map((product, index) => {
-          const price =
-            product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
+        {topProducts.map((product, index) => {
+          const price = product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
 
           return (
             <SwiperSlide key={product.id}>
@@ -85,11 +86,14 @@ const ProductCarousel: React.FC = () => {
                 }`}
               >
                 {product.featuredImage && (
-                  <img
-                    src={product.featuredImage.url}
-                    alt={product.title}
-                    className="rounded-md mb-4 w-full object-cover h-48"
-                  />
+                  <div className="w-full h-48 overflow-hidden rounded-md mb-4">
+                    <img
+                      src={`${product.featuredImage.url}&width=400`}
+                      alt={product.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 )}
                 <h2 className="text-lg font-semibold">{product.title}</h2>
                 <p className="text-gray-600 mt-2">
