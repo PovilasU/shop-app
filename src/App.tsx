@@ -8,8 +8,8 @@ function App() {
     <main className="min-h-screen bg-gray-50">
       
       <ProductCarousel />
-      <ProductGrid />
-      <FAQSection />
+      {/* <ProductGrid />
+      <FAQSection /> */}
     </main>
   );
 }
