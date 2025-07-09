@@ -60,46 +60,44 @@ const ProductCarousel: React.FC = () => {
       </div>
 
       {/* Carousel */}
-      <Swiper
+        <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={20}
         pagination={{
-          el: '.custom-swiper-pagination',
-          clickable: true,
+            el: '.custom-swiper-pagination',
+            clickable: true,
         }}
         autoplay={{ delay: 4000 }}
         loop
         breakpoints={{
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
+            0: { slidesPerView: 1.2 }, // slightly more than 1 slide visible
+            480: { slidesPerView: 1.5 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
         }}
-      >
+        >
         {topProducts.map((product, index) => {
           const price = product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
 
           return (
             <SwiperSlide key={product.id}>
-              <div
+            <div
                 className={`bg-white rounded-xl shadow hover:shadow-lg transition p-4 h-full ${
-                  index % 2 === 1 ? 'mt-6' : ''
+                index % 2 === 1 ? 'mt-6' : ''
                 }`}
-              >
-                {product.featuredImage && (
-                  <div className="w-full h-48 overflow-hidden rounded-md mb-4">
-                    <img
-                      src={`${product.featuredImage.url}&width=400`}
-                      alt={product.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+            >
+                <div className="w-full h-48 overflow-hidden rounded-md mb-4">
+                <img
+                    src={`${product.featuredImage?.url}&width=400`}
+                    alt={product.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                />
+                </div>
                 <h2 className="text-lg font-semibold">{product.title}</h2>
-                <p className="text-gray-600 mt-2">
-                  ${parseFloat(price).toFixed(2)}
-                </p>
-              </div>
+                <p className="text-gray-600 mt-2">${parseFloat(price).toFixed(2)}</p>
+            </div>
             </SwiperSlide>
           );
         })}
