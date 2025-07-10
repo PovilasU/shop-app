@@ -1,17 +1,19 @@
-export const fetchProducts = async () => {
+export const fetchProducts = async (afterCursor?: string) => {
   const query = `
     {
-      products(first: 20) {
+      products(first: 8${afterCursor ? `, after: "${afterCursor}"` : ''}) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
         edges {
           node {
             id
             title
-            description
             featuredImage {
-              id
               url
             }
-            variants(first: 3) {
+            variants(first: 1) {
               edges {
                 node {
                   price {
@@ -34,5 +36,11 @@ export const fetchProducts = async () => {
   });
 
   const json = await res.json();
-  return json.data.products.edges.map((edge: any) => edge.node);
+  const data = json.data.products;
+
+  return {
+    products: data.edges.map((edge: any) => edge.node),
+    nextCursor: data.pageInfo.endCursor,
+    hasNextPage: data.pageInfo.hasNextPage,
+  };
 };

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../api/fetchProducts';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import './product-carousel.css'; // custom CSS for pagination styles
+import './product-carousel.css';
 
 interface Product {
   id: string;
@@ -30,16 +29,38 @@ interface Product {
 
 const ProductCarousel: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      const data = await fetchProducts();
-      setProducts(data);
+  const loadProducts = async (afterCursor?: string) => {
+    try {
+      const { products: newProducts, nextCursor, hasNextPage: more } = await fetchProducts(afterCursor);
+
+      // Deduplicate by ID
+      setProducts((prev) => {
+        const all = [...prev, ...newProducts];
+        const unique = Array.from(new Map(all.map(p => [p.id, p])).values());
+        return unique;
+      });
+
+      setCursor(nextCursor);
+      setHasNextPage(more);
       setLoading(false);
-    };
+    } catch (err) {
+      console.error("Failed to fetch products:", err);
+    }
+  };
+
+  useEffect(() => {
     loadProducts();
   }, []);
+
+  const handleReachEnd = () => {
+    if (hasNextPage && cursor) {
+      loadProducts(cursor);
+    }
+  };
 
   if (loading) {
     return (
@@ -48,8 +69,6 @@ const ProductCarousel: React.FC = () => {
       </div>
     );
   }
-
-  const topProducts = products.slice(0, 8);
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
@@ -60,50 +79,52 @@ const ProductCarousel: React.FC = () => {
       </div>
 
       {/* Carousel */}
-        <Swiper
+      <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={20}
         pagination={{
-            el: '.custom-swiper-pagination',
-            clickable: true,
+          el: '.custom-swiper-pagination',
+          clickable: true,
         }}
         autoplay={{ delay: 4000 }}
-        loop
+        loop={false}
+        onReachEnd={handleReachEnd}
         breakpoints={{
-            0: { slidesPerView: 1.2 }, // slightly more than 1 slide visible
-            480: { slidesPerView: 1.5 },
-            640: { slidesPerView: 2 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
+          0: { slidesPerView: 1.2 },
+          480: { slidesPerView: 1.5 },
+          640: { slidesPerView: 2 },
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
         }}
-        >
-        {topProducts.map((product, index) => {
-          const price = product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
+      >
+      {products.map((product, index) => {
+  const price = product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
+  const productId = product.id.split('/').pop(); // Unique ID for key
 
-          return (
-            <SwiperSlide key={product.id}>
-            <div
-                className={`bg-white rounded-xl shadow hover:shadow-lg transition p-4 h-full ${
-                index % 2 === 1 ? 'mt-6' : ''
-                }`}
-            >
-                <div className="w-full h-48 overflow-hidden rounded-md mb-4">
-                <img
-                    src={`${product.featuredImage?.url}&width=400`}
-                    alt={product.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                />
-                </div>
-                <h2 className="text-lg font-semibold">{product.title}</h2>
-                <p className="text-gray-600 mt-2">${parseFloat(price).toFixed(2)}</p>
-            </div>
-            </SwiperSlide>
-          );
-        })}
+  return (
+    <SwiperSlide key={productId}>
+      <div
+        className={`bg-white rounded-xl shadow hover:shadow-lg transition p-4 h-full ${
+          index % 2 === 1 ? 'mt-6' : ''
+        }`}
+      >
+        <div className="w-full h-48 overflow-hidden rounded-md mb-4">
+          <img
+            src={`${product.featuredImage?.url || ''}&width=400`}
+            alt={product.title}
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <h2 className="text-lg font-semibold">{product.title}</h2>
+        <p className="text-gray-600 mt-2">${parseFloat(price).toFixed(2)}</p>
+      </div>
+    </SwiperSlide>
+  );
+})}
       </Swiper>
 
-      {/* Pagination below */}
+      {/* Pagination */}
       <div className="custom-swiper-pagination mt-4 text-center" />
     </div>
   );
