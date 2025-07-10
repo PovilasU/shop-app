@@ -24,31 +24,29 @@ export default function Accordion({ items }: AccordionProps) {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const iconContainerWidth = "w-20"; // keep fixed width for consistent alignment
+  const iconContainerWidth = "w-20"; // fixed width container for icons
 
   return (
     <div className="w-full divide-y divide-gray-300">
       {items.map((item, index) => {
         const isOpen = openIndex === index;
 
-
-if (index === 0) {
-  return (
-    <div key={index} className="w-full px-4 sm:px-6 py-5">
-      <div className="flex justify-start sm:justify-end">
-        <div
-          className="px-5 h-10 min-w-[110px] flex items-center justify-center 
-                     rounded-full border border-gray-400 
-                     text-black font-bold text-[13px] tracking-wide 
-                     whitespace-nowrap"
-        >
-          ALL FAQS
-        </div>
-      </div>
-    </div>
-  );
-}
-
+        if (index === 0) {
+          return (
+            <div key={index} className="w-full px-4 sm:px-6 py-5">
+              <div className="flex justify-start sm:justify-end">
+                <div
+                  className="px-5 h-10 min-w-[110px] flex items-center justify-center 
+                             rounded-full border border-gray-400 
+                             text-black font-bold text-[13px] tracking-wide 
+                             whitespace-nowrap"
+                >
+                  ALL FAQS
+                </div>
+              </div>
+            </div>
+          );
+        }
 
         return (
           <div key={index}>
@@ -59,7 +57,11 @@ if (index === 0) {
               <span className="text-black font-medium text-base sm:text-lg">
                 {item.title}
               </span>
-              <div className={`${iconContainerWidth} flex justify-start sm:justify-center`}>
+
+              {/* Icon container: align right on mobile, center on desktop */}
+              <div
+                className={`${iconContainerWidth} flex justify-end sm:justify-center`}
+              >
                 <div className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-400">
                   {isOpen ? (
                     <Minus className="w-4 h-4 text-black" />
