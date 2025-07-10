@@ -2,15 +2,31 @@ import { useEffect, useState } from "react";
 import { fetchProducts } from "../api/fetchProducts";
 import ProductCard from "./ProductCard";
 
-// 
-
-type Product = {
+interface Product {
   id: string;
   title: string;
-  featuredImage: { url: string };
-  variants: { edges: [{ node: { price: { amount: string } } }] };
-};
+  description: string;
+  featuredImage: {
+    id: string;
+    url: string;
+  } | null;
+  variants: {
+    edges: {
+      node: {
+        price: {
+          amount: string;
+          currencyCode: string;
+        };
+      };
+    }[];
+  };
+}
 
+type FetchProductsResult = {
+  products: Product[];
+  nextCursor: string | null;
+  hasNextPage: boolean;
+};
 
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,21 +34,29 @@ export default function ProductGrid() {
   const [sort, setSort] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
-    fetchProducts().then((data) => {
-      setProducts(data);
-    });
+    const load = async () => {
+      try {
+        const result: FetchProductsResult = await fetchProducts();
+        console.log('Fetched products:', result.products);
+        setProducts(result.products || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      }
+    };
+    load();
   }, []);
 
-  const sortedProducts = [...products].sort((a, b) => {
-    const priceA = parseFloat(a.variants.edges[0].node.price.amount);
-    const priceB = parseFloat(b.variants.edges[0].node.price.amount);
-    return sort === "asc" ? priceA - priceB : priceB - priceA;
-  });
+  const sortedProducts = Array.isArray(products)
+    ? [...products].sort((a, b) => {
+        const priceA = parseFloat(a.variants.edges[0].node.price.amount);
+        const priceB = parseFloat(b.variants.edges[0].node.price.amount);
+        return sort === "asc" ? priceA - priceB : priceB - priceA;
+      })
+    : [];
 
-  // Slice to only show visible products
   const visibleProducts = sortedProducts.slice(0, visibleCount);
 
-  // Load more handler
   const loadMore = () => {
     setVisibleCount((prev) => prev + 8);
   };
@@ -50,16 +74,18 @@ export default function ProductGrid() {
           <option value="desc">Price: High to Low</option>
         </select>
       </div>
-        <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+      <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {visibleProducts.map((product) => (
-            <ProductCard
+          <ProductCard
             key={product.id}
             title={product.title}
             image={product.featuredImage?.url || ""}
             price={product.variants.edges[0].node.price.amount}
-            />
+          />
         ))}
-        </div>
+      </div>
+
       {visibleCount < sortedProducts.length && (
         <div className="flex justify-center mt-8">
           <button
