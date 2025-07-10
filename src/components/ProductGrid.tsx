@@ -5,11 +5,7 @@ import ProductCard from "./ProductCard";
 interface Product {
   id: string;
   title: string;
-  description: string;
-  featuredImage: {
-    id: string;
-    url: string;
-  } | null;
+  featuredImage: { url: string } | null;
   variants: {
     edges: {
       node: {
@@ -22,44 +18,41 @@ interface Product {
   };
 }
 
-type FetchProductsResult = {
-  products: Product[];
-  nextCursor: string | null;
-  hasNextPage: boolean;
-};
-
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState<"asc" | "desc">("asc");
 
+  // Load initial products
   useEffect(() => {
-    const load = async () => {
-      try {
-        const result: FetchProductsResult = await fetchProducts();
-        console.log('Fetched products:', result.products);
-        setProducts(result.products || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        setProducts([]);
-      }
-    };
-    load();
+    loadMoreProducts();
   }, []);
 
-  const sortedProducts = Array.isArray(products)
-    ? [...products].sort((a, b) => {
-        const priceA = parseFloat(a.variants.edges[0].node.price.amount);
-        const priceB = parseFloat(b.variants.edges[0].node.price.amount);
-        return sort === "asc" ? priceA - priceB : priceB - priceA;
-      })
-    : [];
+  // Load more products function
+  const loadMoreProducts = async () => {
+    if (loading || !hasNextPage) return;
 
-  const visibleProducts = sortedProducts.slice(0, visibleCount);
-
-  const loadMore = () => {
-    setVisibleCount((prev) => prev + 8);
+    setLoading(true);
+    try {
+      const result = await fetchProducts(nextCursor || undefined);
+      setProducts((prev) => [...prev, ...result.products]);
+      setNextCursor(result.nextCursor);
+      setHasNextPage(result.hasNextPage);
+    } catch (error) {
+      console.error("Error loading products:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Sort products in memory
+  const sortedProducts = [...products].sort((a, b) => {
+    const priceA = parseFloat(a.variants.edges[0].node.price.amount);
+    const priceB = parseFloat(b.variants.edges[0].node.price.amount);
+    return sort === "asc" ? priceA - priceB : priceB - priceA;
+  });
 
   return (
     <div className="px-4 py-8">
@@ -76,7 +69,7 @@ export default function ProductGrid() {
       </div>
 
       <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {visibleProducts.map((product) => (
+        {sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
             title={product.title}
@@ -86,13 +79,14 @@ export default function ProductGrid() {
         ))}
       </div>
 
-      {visibleCount < sortedProducts.length && (
+      {hasNextPage && (
         <div className="flex justify-center mt-8">
           <button
-            onClick={loadMore}
-            className="bg-black text-white rounded-full px-8 py-2 font-semibold hover:bg-gray-800 transition"
+            onClick={loadMoreProducts}
+            disabled={loading}
+            className="bg-black text-white rounded-full px-8 py-2 font-semibold hover:bg-gray-800 transition disabled:opacity-50"
           >
-            Load More
+            {loading ? "Loading..." : "Load More"}
           </button>
         </div>
       )}
