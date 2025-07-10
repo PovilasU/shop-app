@@ -39,13 +39,14 @@ export default function FAQSection() {
         >
           // FREQUENTLY ASKED QUESTIONS
         </p>
-        <h2
-          className="mb-8 uppercase tracking-wide
-                     text-[24px] sm:text-[40px] sm:font-bold
-                     text-black text-left"
-        >
-          EVERYTHING AROUND PRODUCT, ORDER AND DELIVERY
-        </h2>
+      <h2
+        className="mb-8 uppercase tracking-wide
+                  text-[24px] font-bold sm:text-[40px] sm:font-bold
+                  text-black text-left"
+      >
+        EVERYTHING AROUND PRODUCT, ORDER AND DELIVERY
+      </h2>
+
         <Accordion items={faqItems} />
       </div>
     </section>
