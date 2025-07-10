@@ -94,7 +94,7 @@ const ProductCarousel: React.FC = () => {
           480: { slidesPerView: 1.5 },
           640: { slidesPerView: 2 },
           768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
+          1024: { slidesPerView: 3.2 },
         }}
       >
       {products.map((product, index) => {
@@ -108,14 +108,14 @@ const ProductCarousel: React.FC = () => {
           index % 2 === 1 ? 'mt-6' : ''
         }`}
       >
-        <div className="w-full h-48 overflow-hidden rounded-md mb-4">
-          <img
-            src={`${product.featuredImage?.url || ''}&width=400`}
-            alt={product.title}
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
-        </div>
+      <div className="w-full h-48 flex items-center justify-center overflow-hidden rounded-md mb-4 bg-gray-100">
+        <img
+          src={`${product.featuredImage?.url || ''}&width=400`}
+          alt={product.title}
+          loading="lazy"
+          className="max-h-full object-contain"
+        />
+      </div>
         <h2 className="text-lg font-semibold">{product.title}</h2>
         <p className="text-gray-600 mt-2">${parseFloat(price).toFixed(2)}</p>
       </div>
