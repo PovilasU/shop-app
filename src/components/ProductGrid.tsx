@@ -66,18 +66,24 @@ export default function ProductGrid() {
 
   return (
     <div className="px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Explore the Range</h1>
-        <select
-          onChange={(e) => setSort(e.target.value as "asc" | "desc")}
-          className="border border-gray-300 rounded px-3 py-1"
-          aria-label="Sort products"
-          value={sort}
-        >
-          <option value="asc">Price: Low to High</option>
-          <option value="desc">Price: High to Low</option>
-        </select>
-      </div>
+<div className="px-4 py-8">
+  <div className="mb-6">
+    <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px] mb-1">// spring summer 25</p>
+    <div className="flex justify-between items-center">
+      <h1 className="font-bold text-[24px] lg:text-[40px]">Explore the Range</h1>
+      <select
+        onChange={(e) => setSort(e.target.value as "asc" | "desc")}
+        className="border border-gray-300 rounded px-3 py-1"
+        aria-label="Sort products"
+        value={sort}
+      >
+        <option value="asc">Price: Low to High</option>
+        <option value="desc">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 
       <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {sortedProducts.map((product) => (

@@ -20,6 +20,13 @@ export default function ProductCard({ title, image, price, onAddToCart }: Props)
     setIsModalOpen(false); // close modal after adding
   };
 
+  // On mobile, open modal on click anywhere
+  const handleCardClick = () => {
+    if (window.innerWidth < 640) {
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <>
       <div
@@ -27,6 +34,7 @@ export default function ProductCard({ title, image, price, onAddToCart }: Props)
           ${isHovered ? "border-2 border-black shadow-lg" : "border border-transparent"}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={handleCardClick}
       >
         <div className="rounded-md mb-4 w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100">
           <img
@@ -36,17 +44,32 @@ export default function ProductCard({ title, image, price, onAddToCart }: Props)
             loading="lazy"
           />
         </div>
-        <h2 className="text-lg font-semibold">{title}</h2>
-        <p className="text-gray-600 mt-2">${price}</p>
+        <h2 className="text-[14px] sm:text-[16px] font-semibold">{title}</h2>
+        <p className="text-gray-600 mt-2 text-[12px] sm:text-[14px]">${price}</p>
 
-        {/* View button */}
+        {/* View link only on desktop */}
         {isHovered && (
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition"
+            onClick={(e) => {
+              e.stopPropagation(); // prevent triggering card click on desktop
+              setIsModalOpen(true);
+            }}
+            className="absolute bottom-4 right-4 hidden sm:flex items-center text-sm font-semibold text-black hover:text-gray-700 transition"
             type="button"
+            style={{ fontSize: '14px' }}
           >
             View
+            <svg
+              className="ml-1 w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </button>
         )}
       </div>
