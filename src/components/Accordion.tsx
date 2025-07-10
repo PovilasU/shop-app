@@ -25,30 +25,35 @@ export default function Accordion({ items }: AccordionProps) {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  // Width for pill and icon container to align them perfectly
+  const iconContainerWidth = "w-20";
+
   return (
     <div className="w-full divide-y divide-gray-300">
       {items.map((item, index) => {
-        // First row with "ALL FAQS" pill badge instead of plus/minus icon
-   if (index === 0) {
-  return (
-    <div
-      key={index}
-      className="w-full flex items-center justify-between px-4 sm:px-6 py-5"
-    >
-      {/* Empty left side (no title) */}
-      <div></div>
-
-      {/* Right pill badge with adjusted size */}
-      <div className="ml-4 px-3 h-6 flex items-center justify-center rounded-full border border-gray-400 text-black font-semibold text-xs tracking-wide whitespace-nowrap">
-        ALL FAQS
-      </div>
-    </div>
-  );
-}
-
-
-        // Normal accordion rows for the rest
         const isOpen = openIndex === index;
+
+        if (index === 0) {
+          // First row with ALL FAQS pill aligned right above icons, centered within fixed width
+          return (
+            <div
+              key={index}
+              className="w-full flex items-center justify-between px-4 sm:px-6 py-5"
+            >
+              <div></div> {/* Empty left side */}
+
+              <div
+                className={`${iconContainerWidth} flex items-center justify-center`}
+              >
+                <div className="px-4 h-8 flex items-center justify-center rounded-full border border-gray-400 text-black font-bold text-[13px] tracking-wide whitespace-nowrap">
+                  ALL FAQS
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        // Normal accordion rows
         return (
           <div key={index}>
             <button
@@ -58,7 +63,8 @@ export default function Accordion({ items }: AccordionProps) {
               <span className="text-black font-medium text-base sm:text-lg">
                 {item.title}
               </span>
-              <span className="ml-4">
+
+              <div className={`${iconContainerWidth} flex items-center justify-center`}>
                 <div className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-400">
                   {isOpen ? (
                     <Minus className="w-4 h-4 text-black" />
@@ -66,7 +72,7 @@ export default function Accordion({ items }: AccordionProps) {
                     <Plus className="w-4 h-4 text-black" />
                   )}
                 </div>
-              </span>
+              </div>
             </button>
 
             <div
@@ -87,4 +93,3 @@ export default function Accordion({ items }: AccordionProps) {
     </div>
   );
 }
-

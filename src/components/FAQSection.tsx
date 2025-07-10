@@ -28,19 +28,27 @@ const faqItems = [
   },
 ];
 
-
 export default function FAQSection() {
   return (
     <section className="py-16 bg-white px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-10 leading-tight">
+        <p
+          className="mb-10 leading-tight font-medium
+                     text-[14px] sm:text-[12px]
+                     text-black text-left"
+        >
           // FREQUENTLY ASKED QUESTIONS
-        </h2>
-        <p className="text-center mb-8 text-sm uppercase text-gray-500 tracking-wide">
-          EVERYTHING AROUND PRODUCT, ORDER AND DELIVERY
         </p>
+        <h2
+          className="mb-8 uppercase tracking-wide
+                     text-[24px] sm:text-[40px] sm:font-bold
+                     text-black text-left"
+        >
+          EVERYTHING AROUND PRODUCT, ORDER AND DELIVERY
+        </h2>
         <Accordion items={faqItems} />
       </div>
     </section>
   );
 }
+
