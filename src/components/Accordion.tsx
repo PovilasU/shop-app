@@ -28,6 +28,26 @@ export default function Accordion({ items }: AccordionProps) {
   return (
     <div className="w-full divide-y divide-gray-300">
       {items.map((item, index) => {
+        // First row with "ALL FAQS" pill badge instead of plus/minus icon
+   if (index === 0) {
+  return (
+    <div
+      key={index}
+      className="w-full flex items-center justify-between px-4 sm:px-6 py-5"
+    >
+      {/* Empty left side (no title) */}
+      <div></div>
+
+      {/* Right pill badge with adjusted size */}
+      <div className="ml-4 px-3 h-6 flex items-center justify-center rounded-full border border-gray-400 text-black font-semibold text-xs tracking-wide whitespace-nowrap">
+        ALL FAQS
+      </div>
+    </div>
+  );
+}
+
+
+        // Normal accordion rows for the rest
         const isOpen = openIndex === index;
         return (
           <div key={index}>
@@ -67,3 +87,4 @@ export default function Accordion({ items }: AccordionProps) {
     </div>
   );
 }
+
