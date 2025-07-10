@@ -17,9 +17,16 @@ const faqItems = [
 
 export default function FAQSection() {
   return (
-    <section className="py-10 px-4">
-      <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
-      <Accordion items={faqItems} />
+    <section className="py-16 bg-white px-4">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-10 leading-tight">
+          // FREQUENTLY ASKED QUESTIONS
+        </h2>
+        <p className="text-center mb-8 text-sm uppercase text-gray-500 tracking-wide">
+          EVERYTHING AROUND PRODUCT, ORDER AND DELIVERY
+        </p>
+        <Accordion items={faqItems} />
+      </div>
     </section>
   );
 }

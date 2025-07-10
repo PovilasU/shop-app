@@ -9,7 +9,7 @@ function App() {
     <div className="max-w-7xl mx-auto">
       <ProductCarousel />
       <ProductGrid />
-      {/* <FAQSection /> */}
+      <FAQSection />
     </div>
   </main>
   );
