@@ -73,10 +73,12 @@ const ProductCarousel: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
       {/* Header */}
-      <div className="mb-6 text-center">
-        <h2 className="text-3xl font-bold text-gray-800">Featured Products</h2>
-        <p className="text-gray-500 mt-1">Discover top picks from our store</p>
-      </div>
+<div className="mb-6 text-left w-full lg:w-1/2">
+  <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px]">// spring summer 25</p>
+  <h2 className="font-bold text-gray-800 uppercase leading-tight text-[32px] lg:text-[64px] max-w-full lg:max-w-[20ch]">
+  Shake up your summer look
+</h2>
+</div>
 
       {/* Carousel */}
       <Swiper
@@ -102,24 +104,25 @@ const ProductCarousel: React.FC = () => {
   const productId = product.id.split('/').pop(); // Unique ID for key
 
   return (
-    <SwiperSlide key={productId}>
-      <div
-        className={`bg-white rounded-xl shadow hover:shadow-lg transition p-4 h-full ${
-          index % 2 === 1 ? 'mt-6' : ''
-        }`}
-      >
-      <div className="w-full h-48 flex items-center justify-center overflow-hidden rounded-md mb-4 bg-gray-100">
-        <img
-          src={`${product.featuredImage?.url || ''}&width=400`}
-          alt={product.title}
-          loading="lazy"
-          className="max-h-full object-contain"
-        />
-      </div>
-        <h2 className="text-lg font-semibold">{product.title}</h2>
-        <p className="text-gray-600 mt-2">${parseFloat(price).toFixed(2)}</p>
-      </div>
-    </SwiperSlide>
+<SwiperSlide key={product.id}>
+  <div
+    className="relative rounded-xl overflow-hidden shadow hover:shadow-lg transition h-[400px] w-[280px]"
+  >
+    <img
+      src={`${product.featuredImage?.url}&width=600`}
+      alt={product.title}
+      loading="lazy"
+      className="object-contain h-full w-full"
+      style={{ backgroundColor: '#f0f0f0' }} // optional fallback bg color
+    />
+    <div className="absolute top-4 left-4 right-4">
+      <h2 className="text-black text-lg font-semibold truncate">{product.title}</h2>
+      <p className="text-black text-sm mt-1">
+        ${parseFloat(price).toFixed(2)}
+      </p>
+    </div>
+  </div>
+</SwiperSlide>
   );
 })}
       </Swiper>
