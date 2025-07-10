@@ -96,17 +96,21 @@ export default function ProductGrid() {
         ))}
       </div>
 
-      {hasNextPage && (
-        <div className="flex justify-center mt-8">
-          <button
-            onClick={loadMoreProducts}
-            disabled={loading}
-            className="bg-black text-white rounded-full px-8 py-2 font-semibold hover:bg-gray-800 transition disabled:opacity-50"
-          >
-            {loading ? "Loading..." : "Load More"}
-          </button>
-        </div>
-      )}
+{hasNextPage && (
+  <div className="flex justify-center mt-8">
+    <button
+      onClick={loadMoreProducts}
+      disabled={loading}
+      className="text-black text-[13px] font-bold rounded-full px-6 py-2 hover:bg-gray-100 transition disabled:opacity-50"
+      style={{ border: "2px solid #CCCCCC" }}
+    >
+      {loading ? "Loading..." : "Load More"}
+    </button>
+  </div>
+)}
+
+
+
     </div>
   );
 }
