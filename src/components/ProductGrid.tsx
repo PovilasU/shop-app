@@ -30,14 +30,24 @@ export default function ProductGrid() {
     loadMoreProducts();
   }, []);
 
-  // Load more products function
+  // Load more products function with duplicate filtering
   const loadMoreProducts = async () => {
     if (loading || !hasNextPage) return;
 
     setLoading(true);
     try {
       const result = await fetchProducts(nextCursor || undefined);
-      setProducts((prev) => [...prev, ...result.products]);
+
+      console.log("Next cursor:", result.nextCursor);
+
+      setProducts((prev) => {
+        // Filter out duplicates by product id
+        const newProducts = result.products.filter(
+          (p) => !prev.some((existing) => existing.id === p.id)
+        );
+        return [...prev, ...newProducts];
+      });
+
       setNextCursor(result.nextCursor);
       setHasNextPage(result.hasNextPage);
     } catch (error) {
@@ -62,6 +72,7 @@ export default function ProductGrid() {
           onChange={(e) => setSort(e.target.value as "asc" | "desc")}
           className="border border-gray-300 rounded px-3 py-1"
           aria-label="Sort products"
+          value={sort}
         >
           <option value="asc">Price: Low to High</option>
           <option value="desc">Price: High to Low</option>
