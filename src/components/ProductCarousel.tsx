@@ -73,12 +73,12 @@ const ProductCarousel: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
       {/* Header */}
-<div className="mb-6 text-left w-full lg:w-1/2">
-  <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px]">// spring summer 25</p>
-  <h2 className="font-bold text-gray-800 uppercase leading-tight text-[32px] lg:text-[64px] max-w-full lg:max-w-[20ch]">
-  Shake up your summer look
-</h2>
-</div>
+    <div className="mb-6 text-left w-full lg:w-1/2">
+      <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px]">// spring summer 25</p>
+      <h2 className="font-bold text-gray-800 uppercase leading-tight text-[32px] lg:text-[64px] max-w-full lg:max-w-[20ch]">
+      Shake up your summer look
+    </h2>
+    </div>
 
       {/* Carousel */}
       <Swiper
