@@ -96,7 +96,7 @@ src
 - Vite as build tool
 - Tailwind CSS for styling
 - Swiper.js for carousel
-- Jest + React Testing Library for unit tests
+- React Testing Library for unit tests
 - Mock Shop API for product data
 
 ---
