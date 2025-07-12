@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useHover } from "../hooks/useHover";
+import { useQuantity } from "../hooks/useQuantity";
 
 type Props = {
   title: string;
@@ -8,12 +10,10 @@ type Props = {
 };
 
 export default function ProductCard({ title, image, price, onAddToCart }: Props) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const { isHovered, onMouseEnter, onMouseLeave } = useHover();
+  const { quantity, increment, decrement } = useQuantity(1, 1, 99);
 
-  const increment = () => setQuantity(q => Math.min(q + 1, 99));
-  const decrement = () => setQuantity(q => Math.max(q - 1, 1));
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddToCart = () => {
     if (onAddToCart) onAddToCart(quantity);
@@ -32,8 +32,8 @@ export default function ProductCard({ title, image, price, onAddToCart }: Props)
       <div
         className={`relative bg-white rounded-xl shadow transition p-4 cursor-pointer
           ${isHovered ? "border-2 border-black shadow-lg" : "border border-transparent"}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         onClick={handleCardClick}
       >
         <div className="rounded-md mb-4 w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100">
