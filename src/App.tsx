@@ -1,6 +1,7 @@
 import { FAQSection } from "./components/FAQSection";
 import {  ProductGrid } from "./components/ProductCatalog";
 import { ProductCarousel } from "./components/ProductCarousel";
+import {Footer} from "./components/Footer";
 
 
 function App() {
@@ -10,7 +11,13 @@ function App() {
       <ProductCarousel />
       <ProductGrid />
       <FAQSection />
+      <Footer 
+      gitUrl="https://github.com/yourusername/yourrepo" 
+      linkedinUrl="https://www.linkedin.com/in/povilas-urbonas-0a6a53a4/" 
+        />
     </div>
+ 
+
   </main>
   );
 }
