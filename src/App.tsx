@@ -12,7 +12,7 @@ function App() {
       <ProductGrid />
       <FAQSection />
       <Footer 
-      gitUrl="https://github.com/yourusername/yourrepo" 
+      gitUrl="https://github.com/PovilasU/shop-app" 
       linkedinUrl="https://www.linkedin.com/in/povilas-urbonas-0a6a53a4/" 
         />
     </div>
