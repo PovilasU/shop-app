@@ -1,8 +1,6 @@
-
 # Shop App
 
-A small React + TypeScript app demonstrating front-end development skills by consuming the [Mock Shop](https://mock.shop/) API.  
-It features a responsive product catalog, carousel, filtering, sorting, and reusable components, styled with Tailwind CSS.
+A small React + TypeScript app demonstrating front-end development skills using the [Mock Shop API](https://mock.shop/). The app features a product carousel, responsive product grid with sorting, and more.
 
 ---
 
@@ -16,25 +14,28 @@ It features a responsive product catalog, carousel, filtering, sorting, and reus
 
 ---
 
+## Project Overview
+
+This app is built to showcase competency in front-end development including:
+
+- Fetching and displaying product data from a public API (Mock Shop).
+- Implementing reusable components like product carousel and accordion.
+- Responsive product grid layout with sorting by price.
+- Clean TypeScript code using ES6+ features.
+- Styling using Tailwind CSS.
+- Smooth UI animations and interactions.
+- Performance optimizations by limiting product fetching.
+- Unit tests for API calls and hooks.
+
+---
+
 ## Features
 
-- **Reusable Components:**  
-  Interactive carousel and responsive product catalog components.
-
-- **Responsive CTA Grid:**  
-  Displays a grid of products from the API, fully responsive with sorting by price.
-
-- **API Consumption:**  
-  Fetches data from the public Mock Shop API without authentication.
-
-- **Styling:**  
-  Tailwind CSS for modern and responsive UI design.
-
-- **Performance Optimizations:**  
-  Efficient data fetching and rendering to enhance performance.
-
-- **Unit Tests:**  
-  Includes unit tests for API calls and custom hooks to ensure reliability.
+- **Reusable Components:** Carousel, Accordion, Product Cards.
+- **Responsive Design:** Fully responsive grid and layout.
+- **Sorting:** Sort products by price.
+- **Modal Interaction:** Add to cart modal with quantity control.
+- **Unit Tests:** Tests for API calls and custom hooks.
 
 ---
 
@@ -46,17 +47,35 @@ src
 │   ├── fetchCollections.ts
 │   ├── fetchProducts.ts
 │   └── __tests__
+│       ├── fetchCollections.test.ts
+│       └── fetchProducts.test.ts
 ├── App.tsx
 ├── assets
 │   └── react.svg
 ├── components
 │   ├── FAQSection
+│   │   ├── Accordion.tsx
+│   │   ├── FAQSection.tsx
+│   │   └── index.ts
 │   ├── Footer
+│   │   ├── Footer.tsx
+│   │   └── index.ts
 │   ├── ProductCarousel
+│   │   ├── index.ts
+│   │   ├── product-carousel.css
+│   │   └── ProductCarousel.tsx
 │   └── ProductCatalog
+│       ├── index.ts
+│       ├── ProductCard.tsx
+│       └── ProductGrid.tsx
 ├── declarations.d.ts
 ├── hooks
 │   ├── __tests__
+│   │   ├── useCollections.test.tsx
+│   │   ├── useHover.test.tsx
+│   │   ├── useProductPagination.test.tsx
+│   │   ├── useProducts.test.tsx
+│   │   └── useQuantity.test.tsx
 │   ├── useCollections.ts
 │   ├── useHover.ts
 │   ├── useProductPagination.ts
@@ -71,49 +90,67 @@ src
 
 ---
 
-## Getting Started
+## Technologies Used
 
-1. Clone the repository  
-   ```bash
-   git clone https://github.com/PovilasU/shop-app.git
-   cd shop-app
-   ```
-
-2. Install dependencies  
-   ```bash
-   npm install
-   # or
-   yarn
-   ```
-
-3. Run the development server  
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-4. Run tests  
-   ```bash
-   npm test
-   # or
-   yarn test
-   ```
+- React 18 with TypeScript
+- Vite as build tool
+- Tailwind CSS for styling
+- Swiper.js for carousel
+- Jest + React Testing Library for unit tests
+- Mock Shop API for product data
 
 ---
 
-## Notes
+## Installation & Running
 
-- The app uses the Mock Shop API endpoint which requires no authentication.
-- The code is modular, maintainable, and uses best practices with TypeScript and React hooks.
-- Smooth UI animations and responsive layouts enhance user experience.
-- Comments are included in complex sections for clarity.
+1. Clone the repo
+
+```bash
+git clone https://github.com/PovilasU/shop-app.git
+cd shop-app
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn
+```
+
+3. Run development server
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+4. Run tests
+
+```bash
+npm test
+# or
+yarn test
+```
 
 ---
 
-Thank you for reviewing my submission!  
-For questions or feedback, feel free to reach out.
+## Notes on Best Practices
+
+- Limited product fetching to improve performance rather than loading all products at once.
+- Clean, modular and reusable components.
+- Responsive and accessible UI.
+- Unit tests covering hooks and API utilities.
+- Tailwind CSS for rapid styling and responsive design.
 
 ---
 
-*This project was built as part of a competency-based front-end development task.*
+## Contact
+
+Created by PovilasU.  
+Feel free to check the [GitHub repo](https://github.com/PovilasU/shop-app) or the [live demo](https://povilas-shop-app.netlify.app/).
+
+---
+
+Thank you for reviewing my project!
