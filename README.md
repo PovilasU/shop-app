@@ -1,69 +1,52 @@
-# React + TypeScript + Vite
+# Mock Shop Product Carousel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small React app demonstrating front-end skills by consuming the [Mock Shop](https://mock.shop/) public API to display a responsive product carousel with modal product details and add-to-cart functionality.
 
-Currently, two official plugins are available:
+**Live Demo:** [https://povilas-shop-app.netlify.app/](https://povilas-shop-app.netlify.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Project Overview
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+This project showcases a **responsive product carousel** component fetching product data from the Mock Shop API. It highlights:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Usage of a **reusable interactive carousel** component.
+- Responsive design with Tailwind CSS.
+- Modal with product details and quantity controls.
+- Basic add-to-cart alert interaction.
+- API integration with pagination (optional load more disabled for performance).
+- Clean TypeScript code and modern React practices.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Check out the live demo here: [https://povilas-shop-app.netlify.app/](https://povilas-shop-app.netlify.app/)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Reusable ProductCarousel component** with Swiper.js slider.
+- Responsive carousel layout adapting to various screen sizes.
+- Modal popup showing product details, image, and quantity selector.
+- Pagination and autoplay controls on the slider.
+- Footer with configurable GitHub and LinkedIn links.
+- Optimized for performance with limited data fetch (no infinite loading on scroll end).
+- Tailwind CSS for styling and responsive UI.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## Tech Stack
+
+- React + TypeScript
+- Tailwind CSS
+- Swiper.js for carousel/slider
+- Custom React hooks for data fetching (`useProductPagination`)
+- Mock Shop API (no authentication required)
+
+---
+
+## Installation & Running Locally
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/PovilasU/shop-app.git
+   cd shop-app
