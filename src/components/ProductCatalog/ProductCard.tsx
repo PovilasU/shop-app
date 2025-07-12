@@ -45,7 +45,7 @@ export default function ProductCard({ title, image, price, onAddToCart }: Props)
           />
         </div>
         <h2 className="text-[14px] sm:text-[16px] font-semibold">{title}</h2>
-        <p className="text-gray-600 mt-2 text-[12px] sm:text-[14px]">${price}</p>
+        <p className="text-gray-600 mt-2 text-[12px] sm:text-[14px]"> ${Number(price).toFixed(2)}</p>
 
         {/* View link only on desktop */}
         {isHovered && (
@@ -100,7 +100,7 @@ export default function ProductCard({ title, image, price, onAddToCart }: Props)
               loading="lazy"
             />
             <h2 className="mt-6 text-2xl font-bold text-center">{title}</h2>
-            <p className="text-gray-600 mt-2 text-center">${price}</p>
+            <p className="text-gray-600 mt-2 text-center"> ${Number(price).toFixed(2)}</p>
 
             {/* Quantity selector and Add to Cart */}
             <div className="mt-6 flex items-center space-x-4">
