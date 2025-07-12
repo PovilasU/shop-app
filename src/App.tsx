@@ -1,6 +1,6 @@
-import ProductGrid from "./components/ProductGrid";
-import FAQSection from "./components/FAQSection";
-import ProductCarousel from './components/ProductCarousel';
+import { FAQSection } from "./components/FAQSection";
+import {  ProductGrid } from "./components/ProductCatalog";
+import { ProductCarousel } from "./components/ProductCarousel";
 
 
 function App() {

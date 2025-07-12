@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useHover } from "../hooks/useHover";
-import { useQuantity } from "../hooks/useQuantity";
+import { useHover } from "../../hooks/useHover";
+import { useQuantity } from "../../hooks/useQuantity";
 
 type Props = {
   title: string;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
-import { useProductPagination } from "../hooks/useProductPagination";
+import { useProductPagination } from "../../hooks/useProductPagination";
 
 import "swiper/css";
 import "swiper/css/pagination";
