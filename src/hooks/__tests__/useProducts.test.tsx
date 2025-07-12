@@ -1,13 +1,15 @@
 // src/hooks/__tests__/useProducts.test.tsx
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { waitFor } from "@testing-library/react";
-import { useProducts } from "../useProducts";
+import { useProducts, type UseProductsParams } from "../useProducts";
 import * as api from "../../api/fetchProducts";
+
 
 vi.mock("../../api/fetchProducts");
 
-const mockedFetchProducts = api.fetchProducts as unknown as vi.Mock;
+
+const mockedFetchProducts = api.fetchProducts as unknown as Mock;
 
 describe("useProducts", () => {
   beforeEach(() => {
@@ -115,15 +117,19 @@ describe("useProducts", () => {
 
     mockedFetchProducts.mockResolvedValueOnce(data1);
 
+    // Correctly typed initialProps for the hook
+    const initialProps: UseProductsParams = { collectionId: null, sort: "asc" };
+
     const { result, rerender } = renderHook(
-      (props) => useProducts(props),
-      { initialProps: { collectionId: null, sort: "asc" } }
+      (props: UseProductsParams) => useProducts(props),
+      { initialProps }
     );
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     mockedFetchProducts.mockResolvedValueOnce(data2);
 
+    // Rerender with new props, properly typed literals
     rerender({ collectionId: "123", sort: "desc" });
 
     await waitFor(() => expect(result.current.loading).toBe(false));

@@ -74,7 +74,9 @@ export default function Accordion({ items }: AccordionProps) {
             </button>
 
             <div
-              ref={(el) => (refs.current[index] = el)}
+              ref={(el) => {
+                refs.current[index] = el;
+              }}
               id={`accordion-content-${index}`}
               className="px-4 sm:px-6 overflow-hidden transition-all duration-300 ease-in-out"
               style={{

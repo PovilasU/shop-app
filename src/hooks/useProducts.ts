@@ -17,7 +17,7 @@ export interface Product {
   };
 }
 
-interface UseProductsParams {
+export interface UseProductsParams {
   collectionId?: string | null;
   sort: "asc" | "desc";
 }
@@ -79,7 +79,7 @@ export function useProducts({ collectionId, sort }: UseProductsParams): UseProdu
 
       setProducts((prev) => {
         const newProducts = result.products.filter(
-          (p) => !prev.some((existing) => existing.id === p.id)
+          (p: { id: string; }) => !prev.some((existing) => existing.id === p.id)
         );
         return [...prev, ...newProducts];
       });

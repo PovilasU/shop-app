@@ -5,6 +5,11 @@ import * as api from "../../api/fetchProducts";
 
 vi.mock("../../api/fetchProducts");
 
+import { vi, type Mock } from "vitest";
+
+// Then use:
+(vi.fn() as Mock)
+
 const mockProducts = [
   {
     id: "1",
@@ -34,7 +39,7 @@ describe("useProductPagination", () => {
   });
 
   it("should fetch products on mount", async () => {
-    (api.fetchProducts as vi.Mock).mockResolvedValue({
+    (api.fetchProducts as Mock).mockResolvedValue({
       products: mockProducts,
       nextCursor: "cursor123",
       hasNextPage: true,
@@ -52,7 +57,7 @@ describe("useProductPagination", () => {
   });
 
   it("should load more products when loadMore is called", async () => {
-    (api.fetchProducts as vi.Mock)
+    (api.fetchProducts as Mock)
       .mockResolvedValueOnce({
         products: mockProducts,
         nextCursor: "cursor123",
@@ -92,7 +97,7 @@ describe("useProductPagination", () => {
   it("should handle fetch error gracefully", async () => {
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    (api.fetchProducts as vi.Mock).mockRejectedValue(new Error("Failed fetch"));
+    (api.fetchProducts as Mock).mockRejectedValue(new Error("Failed fetch"));
 
     const { result } = renderHook(() => useProductPagination());
 

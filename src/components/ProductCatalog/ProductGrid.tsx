@@ -3,13 +3,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import ProductCard from "./ProductCard";
 import { useCollections } from "../../hooks/useCollections";
-import { useProducts, type Product } from "../../hooks/useProducts";
+import { useProducts} from "../../hooks/useProducts";
 
 export default function ProductGrid() {
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [collectionId, setCollectionId] = useState<string | null>(null);
 
-  const { collections, loading: collectionsLoading, error: collectionsError } = useCollections();
+  const { collections} = useCollections();
   const { products, loading, error, hasNextPage, loadMore } = useProducts({ collectionId, sort });
 
   return (

@@ -1,4 +1,5 @@
-import { fetchCollections, Collection } from "../fetchCollections";
+import { vi } from "vitest";
+import { fetchCollections, type Collection } from "../fetchCollections";
 
 describe("fetchCollections", () => {
   beforeEach(() => {

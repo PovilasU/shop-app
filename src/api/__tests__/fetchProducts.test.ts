@@ -1,5 +1,5 @@
 // src/api/__tests__/fetchProducts.test.ts
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from "vitest";
 import { fetchProducts } from "../fetchProducts";
 
 describe("fetchProducts", () => {
@@ -46,7 +46,7 @@ describe("fetchProducts", () => {
       },
     };
 
-    (global.fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    (global.fetch as unknown as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockResponse,
     });
@@ -90,7 +90,7 @@ describe("fetchProducts", () => {
       })
     );
 
-    const fetchCall = (global.fetch as unknown as vi.Mock).mock.calls[0];
+    const fetchCall = (global.fetch as unknown as Mock).mock.calls[0];
     const fetchOptions = fetchCall[1];
     const body = JSON.parse(fetchOptions.body);
     expect(body.query).toContain('collection(id: "collection123")');
@@ -129,7 +129,7 @@ describe("fetchProducts", () => {
       },
     };
 
-    (global.fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    (global.fetch as unknown as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockResponse,
     });
@@ -171,7 +171,7 @@ describe("fetchProducts", () => {
       })
     );
 
-    const fetchCall = (global.fetch as unknown as vi.Mock).mock.calls[0];
+    const fetchCall = (global.fetch as unknown as Mock).mock.calls[0];
     const fetchOptions = fetchCall[1];
     const body = JSON.parse(fetchOptions.body);
     expect(body.query).toContain("products");
