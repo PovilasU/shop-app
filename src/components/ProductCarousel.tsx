@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { fetchProducts } from '../api/fetchProducts';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
+import React, { useEffect, useState } from "react";
+import { fetchProducts } from "../api/fetchProducts";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
 
-import 'swiper/css';
-import 'swiper/css/pagination';
-import './product-carousel.css';
+import "swiper/css";
+import "swiper/css/pagination";
+import "./product-carousel.css";
 
 interface Product {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   featuredImage: {
-    id: string;
+    id?: string;
     url: string;
   } | null;
   variants: {
@@ -38,21 +38,22 @@ const ProductCarousel: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
 
   const loadProducts = async (afterCursor?: string) => {
+    setLoading(true);
     try {
-      const { products: newProducts, nextCursor, hasNextPage: more } = await fetchProducts(afterCursor);
+      const { products: newProducts, nextCursor, hasNextPage: more } =
+        await fetchProducts({ afterCursor });
 
-      // Deduplicate by ID
       setProducts((prev) => {
-        const all = [...prev, ...newProducts];
-        const unique = Array.from(new Map(all.map(p => [p.id, p])).values());
-        return unique;
+        const combined = [...prev, ...newProducts];
+        // Deduplicate by product id
+        return Array.from(new Map(combined.map((p) => [p.id, p])).values());
       });
 
       setCursor(nextCursor);
       setHasNextPage(more);
-      setLoading(false);
     } catch (err) {
       console.error("Failed to fetch products:", err);
+    } finally {
       setLoading(false);
     }
   };
@@ -67,17 +68,16 @@ const ProductCarousel: React.FC = () => {
     }
   };
 
-  const increment = () => setQuantity(q => Math.min(q + 1, 99));
-  const decrement = () => setQuantity(q => Math.max(q - 1, 1));
+  const increment = () => setQuantity((q) => Math.min(q + 1, 99));
+  const decrement = () => setQuantity((q) => Math.max(q - 1, 1));
 
   const handleAddToCart = () => {
-    // You can add your add to cart logic here
     alert(`Added ${quantity} of "${modalProduct?.title}" to cart.`);
-    setModalProduct(null); // close modal
+    setModalProduct(null);
     setQuantity(1);
   };
 
-  if (loading) {
+  if (loading && products.length === 0) {
     return (
       <div className="w-full max-w-6xl mx-auto py-8 text-center">
         <div className="text-lg text-gray-500">Loading featured products...</div>
@@ -100,7 +100,7 @@ const ProductCarousel: React.FC = () => {
         modules={[Pagination, Autoplay]}
         spaceBetween={20}
         pagination={{
-          el: '.custom-swiper-pagination',
+          el: ".custom-swiper-pagination",
           clickable: true,
         }}
         autoplay={{ delay: 4000 }}
@@ -115,7 +115,7 @@ const ProductCarousel: React.FC = () => {
         }}
       >
         {products.map((product) => {
-          const price = product.variants?.edges?.[0]?.node?.price?.amount || 'N/A';
+          const price = product.variants?.edges?.[0]?.node?.price?.amount || "N/A";
 
           return (
             <SwiperSlide key={product.id}>
@@ -128,7 +128,7 @@ const ProductCarousel: React.FC = () => {
                   alt={product.title}
                   loading="lazy"
                   className="object-contain h-full w-full"
-                  style={{ backgroundColor: '#f0f0f0' }} // optional fallback bg color
+                  style={{ backgroundColor: "#f0f0f0" }}
                 />
                 <div className="absolute top-4 left-4 right-4">
                   <h2 className="text-black text-lg font-semibold truncate">{product.title}</h2>
@@ -176,7 +176,10 @@ const ProductCarousel: React.FC = () => {
             />
             <h2 className="mt-6 text-2xl font-bold text-center">{modalProduct.title}</h2>
             <p className="text-gray-600 mt-2 text-center">
-              ${parseFloat(modalProduct.variants?.edges?.[0]?.node.price.amount || '0').toFixed(2)}
+              $
+              {parseFloat(
+                modalProduct.variants?.edges?.[0]?.node.price.amount || "0"
+              ).toFixed(2)}
             </p>
 
             {/* Quantity selector and Add to Cart */}
