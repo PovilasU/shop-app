@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { fetchProducts } from "../api/fetchProducts";
 import ProductCard from "./ProductCard";
 
+// Import Swiper React components and styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
 interface Product {
   id: string;
   title: string;
@@ -53,7 +57,6 @@ export default function ProductGrid() {
 
   // Fetch products when sort or collectionId changes
   useEffect(() => {
-    // Don't clear products immediately — wait for fetch result
     setNextCursor(null);
     setHasNextPage(true);
 
@@ -65,8 +68,6 @@ export default function ProductGrid() {
           collectionId: collectionId || undefined,
           sort,
         });
-
-       
 
         setProducts(result.products);
         setNextCursor(result.nextCursor);
@@ -92,8 +93,6 @@ export default function ProductGrid() {
         collectionId: collectionId || undefined,
         sort,
       });
-
-      console.log("Loaded more products:", result.products);
 
       setProducts((prev) => {
         const newProducts = result.products.filter(
@@ -132,8 +131,44 @@ export default function ProductGrid() {
               <option value="desc">Price: High to Low</option>
             </select>
 
-            {/* Collection filter pills */}
-            <div className="flex flex-wrap gap-2">
+            {/* Collection pills with Swiper on mobile */}
+            <div className="sm:hidden w-full">
+              <Swiper
+                spaceBetween={8}
+                slidesPerView="auto"
+                freeMode={true}
+              >
+                <SwiperSlide style={{ width: "auto" }}>
+                  <button
+                    onClick={() => setCollectionId(null)}
+                    className={`px-4 py-1 rounded-full border ${
+                      collectionId === null
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-black border-gray-300"
+                    }`}
+                  >
+                    All Collections
+                  </button>
+                </SwiperSlide>
+                {collections.map((col) => (
+                  <SwiperSlide key={col.id} style={{ width: "auto" }}>
+                    <button
+                      onClick={() => setCollectionId(col.id)}
+                      className={`px-4 py-1 rounded-full border ${
+                        collectionId === col.id
+                          ? "bg-black text-white border-black"
+                          : "bg-white text-black border-gray-300"
+                      }`}
+                    >
+                      {col.title}
+                    </button>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+
+            {/* Pills for desktop */}
+            <div className="hidden sm:flex flex-wrap gap-2">
               <button
                 onClick={() => setCollectionId(null)}
                 className={`px-4 py-1 rounded-full border ${
@@ -167,11 +202,12 @@ export default function ProductGrid() {
         <div className="text-center py-8 text-gray-600">Loading products...</div>
       )}
 
-      {/* Products grid */}
+      {/* No products message */}
       {!loading && products.length === 0 && (
         <div className="text-center py-8 text-gray-600">No products found.</div>
       )}
 
+      {/* Products grid */}
       <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => (
           <ProductCard
