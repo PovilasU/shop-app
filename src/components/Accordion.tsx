@@ -21,7 +21,7 @@ export default function Accordion({ items }: AccordionProps) {
   }, [items]);
 
   const toggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
+    setOpenIndex((prev) => (prev === index ? null : index));
   };
 
   const iconContainerWidth = "w-20"; // fixed width container for icons
@@ -31,6 +31,7 @@ export default function Accordion({ items }: AccordionProps) {
       {items.map((item, index) => {
         const isOpen = openIndex === index;
 
+        // Special first item rendering (index === 0)
         if (index === 0) {
           return (
             <div key={index} className="w-full px-4 sm:px-6 py-5">
@@ -48,20 +49,20 @@ export default function Accordion({ items }: AccordionProps) {
           );
         }
 
+        // Standard accordion items
         return (
           <div key={index}>
             <button
               onClick={() => toggle(index)}
               className="w-full flex items-center justify-between px-4 sm:px-6 py-5 text-left hover:bg-gray-50 transition"
+              aria-expanded={isOpen}
+              aria-controls={`accordion-content-${index}`}
             >
               <span className="text-black font-medium text-base sm:text-lg">
                 {item.title}
               </span>
 
-              {/* Icon container: align right on mobile, center on desktop */}
-              <div
-                className={`${iconContainerWidth} flex justify-end sm:justify-center`}
-              >
+              <div className={`${iconContainerWidth} flex justify-end sm:justify-center`}>
                 <div className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-400">
                   {isOpen ? (
                     <Minus className="w-4 h-4 text-black" />
@@ -74,6 +75,7 @@ export default function Accordion({ items }: AccordionProps) {
 
             <div
               ref={(el) => (refs.current[index] = el)}
+              id={`accordion-content-${index}`}
               className="px-4 sm:px-6 overflow-hidden transition-all duration-300 ease-in-out"
               style={{
                 maxHeight: isOpen ? `${heights[index]}px` : "0px",
