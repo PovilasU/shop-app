@@ -32,12 +32,12 @@ export default function ProductGrid() {
   const [collectionId, setCollectionId] = useState<string | null>(null);
   const [collections, setCollections] = useState<Collection[]>([]);
 
-  // Fetch collections on mount
+  // Fetch collections once
   useEffect(() => {
     const loadCollections = async () => {
       try {
         const res = await fetch(
-          "https://mock.shop/api?query={collections(first:10){edges{node{id title}}}}"
+          "https://mock.shop/api?query={collections(first: 10){edges{node{id title}}}}"
         );
         const json = await res.json();
         const fetchedCollections = json.data.collections.edges.map(
@@ -45,49 +45,55 @@ export default function ProductGrid() {
         );
         setCollections(fetchedCollections);
       } catch (error) {
-        console.error("Error loading collections:", error);
+        console.error("Failed to load collections:", error);
       }
     };
     loadCollections();
   }, []);
 
-  // Load initial products whenever sort or collection changes
+  // Fetch products when sort or collectionId changes
   useEffect(() => {
+    // Don't clear products immediately — wait for fetch result
+    setNextCursor(null);
+    setHasNextPage(true);
+
     const loadInitialProducts = async () => {
       setLoading(true);
-      setProducts([]);
-      setNextCursor(null);
-      setHasNextPage(true);
-
       try {
         const result = await fetchProducts({
+          afterCursor: undefined,
           collectionId: collectionId || undefined,
           sort,
         });
+
+       
+
         setProducts(result.products);
         setNextCursor(result.nextCursor);
         setHasNextPage(result.hasNextPage);
       } catch (error) {
         console.error("Error loading products:", error);
+        setProducts([]); // clear on error
       } finally {
         setLoading(false);
       }
     };
 
     loadInitialProducts();
-  }, [collectionId, sort]);
+  }, [sort, collectionId]);
 
-  // Load more products for pagination
   const loadMoreProducts = async () => {
     if (loading || !hasNextPage) return;
-
     setLoading(true);
+
     try {
       const result = await fetchProducts({
         afterCursor: nextCursor || undefined,
         collectionId: collectionId || undefined,
         sort,
       });
+
+      console.log("Loaded more products:", result.products);
 
       setProducts((prev) => {
         const newProducts = result.products.filter(
@@ -109,12 +115,13 @@ export default function ProductGrid() {
     <div className="px-4 py-8">
       <div className="mb-6">
         <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px] mb-1">
-          // spring summer 25
+          {/* spring summer 25 */}
         </p>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="font-bold text-[24px] lg:text-[40px]">Explore the Range</h1>
 
-          <div className="flex gap-2">
+          <div className="flex gap-4 flex-wrap items-center">
+            {/* Sorting dropdown */}
             <select
               onChange={(e) => setSort(e.target.value as "asc" | "desc")}
               className="border border-gray-300 rounded px-3 py-1"
@@ -125,24 +132,45 @@ export default function ProductGrid() {
               <option value="desc">Price: High to Low</option>
             </select>
 
-            <select
-              onChange={(e) =>
-                setCollectionId(e.target.value === "all" ? null : e.target.value)
-              }
-              className="border border-gray-300 rounded px-3 py-1"
-              aria-label="Filter by collection"
-              value={collectionId || "all"}
-            >
-              <option value="all">All Collections</option>
+            {/* Collection filter pills */}
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setCollectionId(null)}
+                className={`px-4 py-1 rounded-full border ${
+                  collectionId === null
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-black border-gray-300"
+                }`}
+              >
+                All Collections
+              </button>
               {collections.map((col) => (
-                <option key={col.id} value={col.id}>
+                <button
+                  key={col.id}
+                  onClick={() => setCollectionId(col.id)}
+                  className={`px-4 py-1 rounded-full border ${
+                    collectionId === col.id
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300"
+                  }`}
+                >
                   {col.title}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Loading indicator */}
+      {loading && products.length === 0 && (
+        <div className="text-center py-8 text-gray-600">Loading products...</div>
+      )}
+
+      {/* Products grid */}
+      {!loading && products.length === 0 && (
+        <div className="text-center py-8 text-gray-600">No products found.</div>
+      )}
 
       <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => (
@@ -155,23 +183,16 @@ export default function ProductGrid() {
         ))}
       </div>
 
-      {loading && products.length === 0 && (
-        <p className="text-center text-gray-500 mt-10">Loading products...</p>
-      )}
-
-      {!loading && products.length === 0 && (
-        <p className="text-center text-gray-500 mt-10">No products found.</p>
-      )}
-
-      {hasNextPage && products.length > 0 && (
+      {/* Load More button */}
+      {hasNextPage && !loading && (
         <div className="flex justify-center mt-8">
           <button
-            onClick={loadMoreProducts}
+            onClick={() => loadMoreProducts()}
             disabled={loading}
             className="text-black text-[13px] font-bold rounded-full px-6 py-2 hover:bg-gray-100 transition disabled:opacity-50"
             style={{ border: "2px solid #CCCCCC" }}
           >
-            {loading ? "Loading..." : "Load More"}
+            Load More
           </button>
         </div>
       )}
