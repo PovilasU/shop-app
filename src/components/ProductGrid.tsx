@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchProducts } from "../api/fetchProducts";
+import { fetchCollections, type Collection } from "../api/fetchCollections";
 import ProductCard from "./ProductCard";
 
 // Import Swiper React components and styles
@@ -22,11 +23,6 @@ interface Product {
   };
 }
 
-interface Collection {
-  id: string;
-  title: string;
-}
-
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -40,18 +36,13 @@ export default function ProductGrid() {
   useEffect(() => {
     const loadCollections = async () => {
       try {
-        const res = await fetch(
-          "https://mock.shop/api?query={collections(first: 10){edges{node{id title}}}}"
-        );
-        const json = await res.json();
-        const fetchedCollections = json.data.collections.edges.map(
-          (edge: any) => edge.node
-        );
+        const fetchedCollections = await fetchCollections();
         setCollections(fetchedCollections);
       } catch (error) {
         console.error("Failed to load collections:", error);
       }
     };
+
     loadCollections();
   }, []);
 

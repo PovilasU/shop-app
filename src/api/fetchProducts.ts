@@ -1,4 +1,3 @@
-// fetchProducts.ts
 interface FetchProductsOptions {
   afterCursor?: string;
   collectionId?: string;
