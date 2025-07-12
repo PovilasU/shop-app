@@ -8,7 +8,8 @@ import "swiper/css/pagination";
 import "./product-carousel.css";
 
 const ProductCarousel: React.FC = () => {
-  const { products, hasNextPage, loading, loadMore } = useProductPagination();
+  // Fetch 6 products initially, no auto load more
+  const { products, loading } = useProductPagination({ limit: 6 });
 
   const [modalProduct, setModalProduct] = useState<typeof products[0] | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -20,12 +21,6 @@ const ProductCarousel: React.FC = () => {
     alert(`Added ${quantity} of "${modalProduct?.title}" to cart.`);
     setModalProduct(null);
     setQuantity(1);
-  };
-
-  const handleReachEnd = () => {
-    if (hasNextPage) {
-      loadMore();
-    }
   };
 
   if (loading && products.length === 0) {
@@ -45,26 +40,26 @@ const ProductCarousel: React.FC = () => {
         </h2>
       </div>
 
-      <Swiper
-        modules={[Pagination, Autoplay]}
-        spaceBetween={20}
-        pagination={{
-          el: ".custom-swiper-pagination",
-          clickable: true,
-        }}
-        autoplay={{ delay: 4000 }}
-        loop={false}
-        onReachEnd={handleReachEnd}
-        breakpoints={{
-          0: { slidesPerView: 1.2 },
-          480: { slidesPerView: 1.5 },
-          640: { slidesPerView: 2 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3.2 },
-        }}
-      >
+        <Swiper
+          modules={[Pagination, Autoplay]}
+          spaceBetween={20}
+          pagination={{
+            el: ".custom-swiper-pagination",
+            clickable: true,
+            dynamicBullets: false,  // set false to show all bullets instead of a dynamic smaller subset
+          }}
+          autoplay={{ delay: 4000 }}
+          loop={false}
+          breakpoints={{
+            0: { slidesPerView: 1.2 },
+            480: { slidesPerView: 1.5 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3.2 },
+          }}
+        >
         {products.map((product) => {
-          const price = product.variants?.edges?.[0]?.node?.price?.amount || "N/A";
+          const price = product.variants?.edges?.[0]?.node?.price?.amount || "0";
 
           return (
             <SwiperSlide key={product.id}>
