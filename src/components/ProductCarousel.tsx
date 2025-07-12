@@ -1,72 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { fetchProducts } from "../api/fetchProducts";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
+import { useProductPagination } from "../hooks/useProductPagination";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import "./product-carousel.css";
 
-interface Product {
-  id: string;
-  title: string;
-  description?: string;
-  featuredImage: {
-    id?: string;
-    url: string;
-  } | null;
-  variants: {
-    edges: {
-      node: {
-        price: {
-          amount: string;
-          currencyCode: string;
-        };
-      };
-    }[];
-  };
-}
-
 const ProductCarousel: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const { products, hasNextPage, loading, loadMore } = useProductPagination();
 
-  // Modal state
-  const [modalProduct, setModalProduct] = useState<Product | null>(null);
+  const [modalProduct, setModalProduct] = useState<typeof products[0] | null>(null);
   const [quantity, setQuantity] = useState(1);
-
-  const loadProducts = async (afterCursor?: string) => {
-    setLoading(true);
-    try {
-      const { products: newProducts, nextCursor, hasNextPage: more } =
-        await fetchProducts({ afterCursor });
-
-      setProducts((prev) => {
-        const combined = [...prev, ...newProducts];
-        // Deduplicate by product id
-        return Array.from(new Map(combined.map((p) => [p.id, p])).values());
-      });
-
-      setCursor(nextCursor);
-      setHasNextPage(more);
-    } catch (err) {
-      console.error("Failed to fetch products:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const handleReachEnd = () => {
-    if (hasNextPage && cursor) {
-      loadProducts(cursor);
-    }
-  };
 
   const increment = () => setQuantity((q) => Math.min(q + 1, 99));
   const decrement = () => setQuantity((q) => Math.max(q - 1, 1));
@@ -75,6 +20,12 @@ const ProductCarousel: React.FC = () => {
     alert(`Added ${quantity} of "${modalProduct?.title}" to cart.`);
     setModalProduct(null);
     setQuantity(1);
+  };
+
+  const handleReachEnd = () => {
+    if (hasNextPage) {
+      loadMore();
+    }
   };
 
   if (loading && products.length === 0) {
@@ -87,7 +38,6 @@ const ProductCarousel: React.FC = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
-      {/* Header */}
       <div className="mb-6 text-left w-full lg:w-1/2">
         <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px]">// spring summer 25</p>
         <h2 className="font-bold text-gray-800 uppercase leading-tight text-[32px] lg:text-[64px] max-w-full lg:max-w-[20ch]">
@@ -95,7 +45,6 @@ const ProductCarousel: React.FC = () => {
         </h2>
       </div>
 
-      {/* Carousel */}
       <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={20}
@@ -140,10 +89,8 @@ const ProductCarousel: React.FC = () => {
         })}
       </Swiper>
 
-      {/* Pagination */}
       <div className="custom-swiper-pagination mt-4 text-center" />
 
-      {/* Modal */}
       {modalProduct && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
@@ -156,7 +103,6 @@ const ProductCarousel: React.FC = () => {
             className="bg-white rounded-lg max-w-[90vw] max-h-[90vh] w-full flex flex-col items-center p-6 relative"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close icon */}
             <button
               onClick={() => {
                 setModalProduct(null);
@@ -176,20 +122,15 @@ const ProductCarousel: React.FC = () => {
             />
             <h2 className="mt-6 text-2xl font-bold text-center">{modalProduct.title}</h2>
             <p className="text-gray-600 mt-2 text-center">
-              $
-              {parseFloat(
-                modalProduct.variants?.edges?.[0]?.node.price.amount || "0"
-              ).toFixed(2)}
+              ${parseFloat(modalProduct.variants?.edges?.[0]?.node.price.amount || "0").toFixed(2)}
             </p>
 
-            {/* Quantity selector and Add to Cart */}
             <div className="mt-6 flex items-center space-x-4">
               <div className="flex items-center border rounded overflow-hidden select-none">
                 <button
                   onClick={decrement}
                   className="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition"
                   type="button"
-                  aria-label="Decrease quantity"
                 >
                   –
                 </button>
@@ -197,14 +138,12 @@ const ProductCarousel: React.FC = () => {
                   type="text"
                   readOnly
                   value={quantity}
-                  className="w-12 text-center border-x border-gray-300 focus:outline-none"
-                  aria-label="Quantity"
+                  className="w-12 text-center border-x border-gray-300"
                 />
                 <button
                   onClick={increment}
                   className="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition"
                   type="button"
-                  aria-label="Increase quantity"
                 >
                   +
                 </button>
