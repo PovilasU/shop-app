@@ -28,7 +28,7 @@ interface UseProductPaginationResult {
   loadMore: () => void;
 }
 
-export function useProductPagination(): UseProductPaginationResult {
+export function useProductPagination(_p0?: { limit: number; }): UseProductPaginationResult {
   const [products, setProducts] = useState<Product[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasNextPage, setHasNextPage] = useState(true);
