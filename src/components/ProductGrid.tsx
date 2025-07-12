@@ -1,112 +1,21 @@
-import { useEffect, useState } from "react";
-import { fetchProducts } from "../api/fetchProducts";
-import { fetchCollections, type Collection } from "../api/fetchCollections";
-import ProductCard from "./ProductCard";
-
-// Import Swiper React components and styles
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-
-interface Product {
-  id: string;
-  title: string;
-  featuredImage: { url: string } | null;
-  variants: {
-    edges: {
-      node: {
-        price: {
-          amount: string;
-          currencyCode: string;
-        };
-      };
-    }[];
-  };
-}
+import ProductCard from "./ProductCard";
+import { useCollections } from "../hooks/useCollections";
+import { useProducts, type Product } from "../hooks/useProducts";
 
 export default function ProductGrid() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [collectionId, setCollectionId] = useState<string | null>(null);
-  const [collections, setCollections] = useState<Collection[]>([]);
 
-  // Fetch collections once
-  useEffect(() => {
-    const loadCollections = async () => {
-      try {
-        const fetchedCollections = await fetchCollections();
-        setCollections(fetchedCollections);
-      } catch (error) {
-        console.error("Failed to load collections:", error);
-      }
-    };
-
-    loadCollections();
-  }, []);
-
-  // Fetch products when sort or collectionId changes
-  useEffect(() => {
-    setNextCursor(null);
-    setHasNextPage(true);
-
-    const loadInitialProducts = async () => {
-      setLoading(true);
-      try {
-        const result = await fetchProducts({
-          afterCursor: undefined,
-          collectionId: collectionId || undefined,
-          sort,
-        });
-
-        setProducts(result.products);
-        setNextCursor(result.nextCursor);
-        setHasNextPage(result.hasNextPage);
-      } catch (error) {
-        console.error("Error loading products:", error);
-        setProducts([]); // clear on error
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadInitialProducts();
-  }, [sort, collectionId]);
-
-  const loadMoreProducts = async () => {
-    if (loading || !hasNextPage) return;
-    setLoading(true);
-
-    try {
-      const result = await fetchProducts({
-        afterCursor: nextCursor || undefined,
-        collectionId: collectionId || undefined,
-        sort,
-      });
-
-      setProducts((prev) => {
-        const newProducts = result.products.filter(
-          (p) => !prev.some((existing) => existing.id === p.id)
-        );
-        return [...prev, ...newProducts];
-      });
-
-      setNextCursor(result.nextCursor);
-      setHasNextPage(result.hasNextPage);
-    } catch (error) {
-      console.error("Error loading more products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { collections, loading: collectionsLoading, error: collectionsError } = useCollections();
+  const { products, loading, error, hasNextPage, loadMore } = useProducts({ collectionId, sort });
 
   return (
     <div className="px-4 py-8">
       <div className="mb-6">
-        <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px] mb-1">
-          {/* spring summer 25 */}
-        </p>
+        <p className="text-gray-500 mt-1 uppercase text-[12px] lg:text-[14px] mb-1">{/* optional subtitle */}</p>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="font-bold text-[24px] lg:text-[40px]">Explore the Range</h1>
 
@@ -124,11 +33,7 @@ export default function ProductGrid() {
 
             {/* Collection pills with Swiper on mobile */}
             <div className="sm:hidden w-full">
-              <Swiper
-                spaceBetween={8}
-                slidesPerView="auto"
-                freeMode={true}
-              >
+              <Swiper spaceBetween={8} slidesPerView="auto" freeMode={true}>
                 <SwiperSlide style={{ width: "auto" }}>
                   <button
                     onClick={() => setCollectionId(null)}
@@ -188,12 +93,17 @@ export default function ProductGrid() {
         </div>
       </div>
 
-      {/* Loading indicator */}
+      {/* Loading & error handling */}
       {loading && products.length === 0 && (
         <div className="text-center py-8 text-gray-600">Loading products...</div>
       )}
 
-      {/* No products message */}
+      {error && (
+        <div className="text-center py-8 text-red-600">
+          Error loading products: {error.message}
+        </div>
+      )}
+
       {!loading && products.length === 0 && (
         <div className="text-center py-8 text-gray-600">No products found.</div>
       )}
@@ -214,7 +124,7 @@ export default function ProductGrid() {
       {hasNextPage && !loading && (
         <div className="flex justify-center mt-8">
           <button
-            onClick={() => loadMoreProducts()}
+            onClick={loadMore}
             disabled={loading}
             className="text-black text-[13px] font-bold rounded-full px-6 py-2 hover:bg-gray-100 transition disabled:opacity-50"
             style={{ border: "2px solid #CCCCCC" }}
