@@ -15,6 +15,9 @@ const ProductCarousel: React.FC = () => {
   );
   const [quantity, setQuantity] = useState(1);
 
+  // State to track loaded high-res images
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+
   const increment = () => setQuantity((q) => Math.min(q + 1, 99));
   const decrement = () => setQuantity((q) => Math.max(q - 1, 1));
 
@@ -33,6 +36,11 @@ const ProductCarousel: React.FC = () => {
       </div>
     );
   }
+
+  // Helper to mark an image as loaded
+  const handleImageLoad = (id: string) => {
+    setLoadedImages((prev) => ({ ...prev, [id]: true }));
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
@@ -77,6 +85,14 @@ const ProductCarousel: React.FC = () => {
           const price =
             product.variants?.edges?.[0]?.node?.price?.amount || "0";
 
+          // Low-res blurry placeholder URL (simulate by smaller size + blur param)
+          const lowResImage = `${product.featuredImage?.url}&width=60&blur=50`;
+
+          // High-res image url
+          const highResImage = `${product.featuredImage?.url}&width=600`;
+
+          const isLoaded = loadedImages[product.id];
+
           return (
             <SwiperSlide key={product.id}>
               <div
@@ -85,13 +101,28 @@ const ProductCarousel: React.FC = () => {
                   index % 2 === 1 ? "translate-y-4" : ""
                 }`}
               >
-                <img
-                  src={`${product.featuredImage?.url}&width=600`}
-                  alt={product.title}
-                  loading="lazy"
-                  className="object-contain h-full w-full"
-                  style={{ backgroundColor: "#f0f0f0" }}
-                />
+                {/* Container for images */}
+                <div className="relative h-full w-full bg-gray-100">
+                  {/* Low-res blurred image */}
+                  <img
+                    src={lowResImage}
+                    alt={`${product.title} blurred placeholder`}
+                    className="absolute top-0 left-0 h-full w-full object-contain filter blur-sm scale-110 transition-opacity duration-500"
+                    style={{ opacity: isLoaded ? 0 : 1 }}
+                    aria-hidden="true"
+                    loading="lazy"
+                  />
+                  {/* High-res image */}
+                  <img
+                    src={highResImage}
+                    alt={product.title}
+                    loading="lazy"
+                    className="relative h-full w-full object-contain transition-opacity duration-500"
+                    style={{ opacity: isLoaded ? 1 : 0 }}
+                    onLoad={() => handleImageLoad(product.id)}
+                  />
+                </div>
+
                 <div className="absolute top-4 left-4 right-4">
                   <h2 className="text-black text-lg font-semibold truncate">
                     {product.title}
