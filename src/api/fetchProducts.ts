@@ -30,7 +30,7 @@ export const fetchProducts = async ({
                 id
                 title
                 featuredImage {
-                  url
+                  url(transform: {maxWidth: 400, maxHeight: 400})
                 }
                 variants(first: 1) {
                   edges {
@@ -61,7 +61,7 @@ export const fetchProducts = async ({
               id
               title
               featuredImage {
-                url
+                url(transform: {maxWidth: 400, maxHeight: 400})
               }
               variants(first: 1) {
                 edges {

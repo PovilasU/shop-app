@@ -1,6 +1,12 @@
+export interface CollectionImage {
+  id: string;
+  url: string;
+}
+
 export interface Collection {
   id: string;
   title: string;
+  image?: CollectionImage;  // optional because some collections may not have images
 }
 
 export const fetchCollections = async (): Promise<Collection[]> => {
@@ -11,6 +17,10 @@ export const fetchCollections = async (): Promise<Collection[]> => {
           node {
             id
             title
+            image {
+              id
+              url(transform: {maxWidth: 400, maxHeight: 400})
+            }
           }
         }
       }
