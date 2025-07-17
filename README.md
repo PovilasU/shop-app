@@ -44,60 +44,36 @@ This app is built to showcase competency in front-end development including:
 ```
 src
 ├── api
-│   ├── fetchCollections.ts
-│   ├── fetchProducts.ts
-│   └── __tests__
-│       ├── fetchCollections.test.ts
-│       └── fetchProducts.test.ts
-├── App.tsx
-├── assets
-│   └── react.svg
+│   ├── fetchCollections.ts
+│   ├── fetchProducts.ts
+│   └── __tests__
 ├── components
-│   ├── FAQSection
-│   │   ├── Accordion.tsx
-│   │   ├── FAQSection.tsx
-│   │   └── index.ts
-│   ├── Footer
-│   │   ├── Footer.tsx
-│   │   └── index.ts
-│   ├── ProductCarousel
-│   │   ├── index.ts
-│   │   ├── product-carousel.css
-│   │   └── ProductCarousel.tsx
-│   └── ProductCatalog
-│       ├── index.ts
-│       ├── ProductCard.tsx
-│       └── ProductGrid.tsx
-├── declarations.d.ts
-├── hooks
-│   ├── __tests__
-│   │   ├── useCollections.test.tsx
-│   │   ├── useHover.test.tsx
-│   │   ├── useProductPagination.test.tsx
-│   │   ├── useProducts.test.tsx
-│   │   └── useQuantity.test.tsx
-│   ├── useCollections.ts
-│   ├── useHover.ts
-│   ├── useProductPagination.ts
-│   ├── useProducts.ts
-│   └── useQuantity.ts
+│   ├── FAQSection/
+│   ├── Footer/
+│   ├── ProductCarousel/
+│   └── ProductCatalog/
+├── hooks/
+├── styles/
+├── assets/
+├── App.tsx
 ├── main.tsx
-├── setupTests.ts
-├── styles
-│   └── index.css
-└── vite-env.d.ts
+└── setupTests.ts
+
+docs
+├── figma-link.md         # Link or notes about the Figma design
+└── tasks.md              # Task requirements or planning notes
 ```
 
 ---
 
 ## Technologies Used
 
-- React 18 with TypeScript
-- Vite as build tool
-- Tailwind CSS for styling
-- Swiper.js for carousel
-- React Testing Library for unit tests
-- Mock Shop API for product data
+- **React 18** with **TypeScript**
+- **Vite** as build tool
+- **Tailwind CSS** for styling
+- **Swiper.js** for carousel
+- **React Testing Library** for unit tests
+- **Mock Shop API** for product data
 
 ---
 
@@ -133,6 +109,15 @@ npm test
 # or
 yarn test
 ```
+
+---
+
+## Documentation
+
+Additional documentation can be found in the `docs/` folder:
+
+- **Figma Design:** [docs/figma-link.md](docs/figma-link.md)
+- **Task Requirements:** [docs/tasks.md](docs/tasks.md)
 
 ---
 
