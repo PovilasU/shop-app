@@ -43,15 +43,8 @@ This app is built to showcase competency in front-end development including:
 
 ```
 src
-├── api
-│   ├── fetchCollections.ts
-│   ├── fetchProducts.ts
-│   └── __tests__
-├── components
-│   ├── FAQSection/
-│   ├── Footer/
-│   ├── ProductCarousel/
-│   └── ProductCatalog/
+├── api/
+├── components/
 ├── hooks/
 ├── styles/
 ├── assets/
@@ -60,8 +53,8 @@ src
 └── setupTests.ts
 
 docs
-├── figma-link.md         # Link or notes about the Figma design
-└── tasks.md              # Task requirements or planning notes
+├── Competency test.docx       # Task/technical test description
+└── UNRVLD - Front End Test.png # Visual design or layout (Figma screenshot)
 ```
 
 ---
@@ -114,10 +107,10 @@ yarn test
 
 ## Documentation
 
-Additional documentation can be found in the `docs/` folder:
+Documentation and design references are located in the `docs/` folder:
 
-- **Figma Design:** [docs/figma-link.md](docs/figma-link.md)
-- **Task Requirements:** [docs/tasks.md](docs/tasks.md)
+- 📄 **Competency test.docx** — Task requirements and test description.
+- 🖼️ **UNRVLD - Front End Test.png** — Figma screenshot or design preview.
 
 ---
 
